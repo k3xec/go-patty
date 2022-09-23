@@ -85,16 +85,16 @@ type Listener struct {
 // Accept will accept the next connection, and return the active net.Conn.
 func (l Listener) Accept() (net.Conn, error) {
 	peer := &Addr{}
-	fd, err := C.patty_client_accept(a.client.client, C.int(a.fd), peer.addr())
+	fd, err := C.patty_client_accept(l.client.client, C.int(l.fd), peer.addr())
 	if err != nil {
 		return nil, err
 	}
 	return &Conn{
-		client: a.client,
+		client: l.client,
 		fd:     int(fd),
-		laddr:  a.a,
+		laddr:  l.a,
 		raddr:  *peer,
-		file:   os.NewFile(uintptr(fd), fmt.Sprintf("ax25: %s<->%s", a.a, peer)),
+		file:   os.NewFile(uintptr(fd), fmt.Sprintf("ax25: %s<->%s", l.a, peer)),
 	}, nil
 }
 
